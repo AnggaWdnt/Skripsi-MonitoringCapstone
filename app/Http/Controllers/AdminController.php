@@ -248,6 +248,7 @@ class AdminController extends Controller
     {
         $request->validate([
             'group_name' => 'required|string|max:255|unique:groups,group_name',
+            'theme' => 'required|string|max:255',
             'dosen_id' => 'nullable|exists:users,id',
             'member_ids' => 'nullable|array',
             'member_ids.*' => 'exists:users,id',
@@ -257,6 +258,7 @@ class AdminController extends Controller
 
         $group = Group::create([
             'group_name' => $request->group_name,
+            'theme' => $request->theme,
             'dosen_id' => $request->dosen_id,
             'status' => 'belum_mengajukan',
         ]);
@@ -280,6 +282,7 @@ class AdminController extends Controller
 
         $request->validate([
             'group_name' => 'required|string|max:255|unique:groups,group_name,' . $group->id,
+            'theme' => 'required|string|max:255',
             'dosen_id' => 'nullable|exists:users,id',
             'member_ids' => 'nullable|array',
             'member_ids.*' => 'exists:users,id',
@@ -287,6 +290,7 @@ class AdminController extends Controller
 
         $group->update([
             'group_name' => $request->group_name,
+            'theme' => $request->theme,
             'dosen_id' => $request->dosen_id,
         ]);
 

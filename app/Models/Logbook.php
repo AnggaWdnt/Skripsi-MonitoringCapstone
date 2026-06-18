@@ -11,6 +11,7 @@ class Logbook extends Model
         'mahasiswa_id',
         'date',
         'activity',
+        'section',
         'documentation',
         'status',
         'dosen_note',

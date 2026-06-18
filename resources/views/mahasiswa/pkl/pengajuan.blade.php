@@ -51,25 +51,7 @@
                 <p class="text-[11px] text-slate-400 mt-1">Uraikan secara singkat permasalahan yang diselesaikan dan solusi produk yang diusulkan.</p>
             </div>
 
-            <!-- Survey PDF -->
-            <div>
-                <label for="survey_file" class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
-                    Upload Berkas Bukti Survei Lapangan (PDF)
-                </label>
-                <input type="file" name="survey_file" id="survey_file" accept="application/pdf" {{ $group->survey_file ? '' : 'required' }}
-                    class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all text-sm file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100">
-                
-                @if($group->survey_file)
-                    <p class="text-xs text-slate-500 mt-2 flex items-center gap-1">
-                        <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                        Berkas survei saat ini: 
-                        <a href="{{ asset($group->survey_file) }}" target="_blank" class="font-bold text-emerald-600 hover:text-emerald-500 transition-colors">
-                            Lihat Berkas
-                        </a>
-                    </p>
-                @endif
-                <p class="text-[11px] text-slate-400 mt-1">Wajib mengunggah bukti dokumen survei lapangan yang telah dilakukan sebelumnya (Format: PDF, Maks: 2MB).</p>
-            </div>
+
 
             <!-- Action Buttons -->
             <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">

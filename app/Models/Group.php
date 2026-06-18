@@ -10,6 +10,7 @@ class Group extends Model
 {
     protected $fillable = [
         'group_name',
+        'theme',
         'title',
         'description',
         'survey_file',

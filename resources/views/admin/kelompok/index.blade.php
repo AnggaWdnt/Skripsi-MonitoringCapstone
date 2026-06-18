@@ -37,11 +37,12 @@
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse text-sm">
                 <thead>
-                    <tr class="border-b border-slate-100 text-slate-400 text-xs font-semibold uppercase tracking-wider">
+                     <tr class="border-b border-slate-100 text-slate-400 text-xs font-semibold uppercase tracking-wider">
                         <th class="py-3 px-4">Nama Kelompok</th>
+                        <th class="py-3 px-4">Tema Proyek</th>
                         <th class="py-3 px-4">Dosen Pembimbing</th>
                         <th class="py-3 px-4">Anggota Tim</th>
-                        <th class="py-3 px-4">Judul Capstone & Survei</th>
+                        <th class="py-3 px-4">Judul Capstone</th>
                         <th class="py-3 px-4">Status Pengajuan</th>
                         <th class="py-3 px-4 text-right">Aksi</th>
                     </tr>
@@ -51,6 +52,11 @@
                         <tr class="hover:bg-slate-50/50 transition-colors">
                             <td class="py-4 px-4 font-bold text-slate-800">
                                 {{ $group->group_name }}
+                            </td>
+                            <td class="py-4 px-4 text-slate-700 font-semibold">
+                                <span class="px-2.5 py-1 rounded-lg text-xs bg-slate-100 text-slate-700 border border-slate-200/60 inline-block">
+                                    {{ $group->theme ?? 'Belum Ditentukan' }}
+                                </span>
                             </td>
                             <td class="py-4 px-4 text-slate-700 font-medium">
                                 {{ $group->pembimbing ? $group->pembimbing->name : 'Belum Di-plot' }}
@@ -66,14 +72,8 @@
                             </td>
                             <td class="py-4 px-4 text-slate-600 max-w-xs">
                                 @if($group->title)
-                                    <div class="font-bold text-slate-800 text-xs leading-normal truncate" title="{{ $group->title }}">
+                                    <div class="font-bold text-slate-800 text-xs leading-normal whitespace-normal" title="{{ $group->title }}">
                                         {{ $group->title }}
-                                    </div>
-                                    <div class="text-[10px] text-slate-400 mt-1">
-                                        <a href="{{ asset($group->survey_file) }}" target="_blank" class="text-emerald-600 hover:text-emerald-500 font-bold inline-flex items-center gap-0.5">
-                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                                            Lihat Berkas Survei
-                                        </a>
                                     </div>
                                 @else
                                     <span class="text-slate-400 italic text-xs">Belum diajukan</span>
@@ -133,6 +133,12 @@
             </div>
 
             <div>
+                <label for="theme" class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Tema Proyek</label>
+                <input type="text" name="theme" required placeholder="Contoh: Internet of Things (IoT), AI, Web App"
+                    class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
+            </div>
+
+            <div>
                 <label for="dosen_id" class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Dosen Pembimbing</label>
                 <select name="dosen_id" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none">
                     <option value="">Belum Ditentukan</option>
@@ -182,6 +188,12 @@
             </div>
 
             <div>
+                <label for="edit_theme" class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Tema Proyek</label>
+                <input type="text" name="theme" id="edit_theme" required placeholder="Contoh: Internet of Things (IoT), AI, Web App"
+                    class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
+            </div>
+
+            <div>
                 <label for="edit_dosen_id" class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Dosen Pembimbing</label>
                 <select name="dosen_id" id="edit_dosen_id" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm">
                     <option value="">Belum Ditentukan</option>
@@ -220,6 +232,7 @@
 
     function openEditModal(group, currentMemberIds) {
         document.getElementById('edit_group_name').value = group.group_name;
+        document.getElementById('edit_theme').value = group.theme || '';
         document.getElementById('edit_dosen_id').value = group.dosen_id || '';
         
         // Build list of checkboxes dynamically

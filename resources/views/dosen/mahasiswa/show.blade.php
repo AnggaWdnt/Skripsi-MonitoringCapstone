@@ -50,17 +50,6 @@
                             </div>
                         @endif
                         <div>
-                            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider block">Bukti Survei Lapangan</span>
-                            @if($student->group->survey_file)
-                                <a href="{{ asset($student->group->survey_file) }}" target="_blank" class="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs font-bold transition-all shadow-sm">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                                    Lihat File Survei (PDF)
-                                </a>
-                            @else
-                                <span class="text-slate-400 text-xs mt-1 block italic">Belum diunggah</span>
-                            @endif
-                        </div>
-                        <div>
                             <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider block">Berkas Laporan Akhir</span>
                             @if($student->group->laporan_file)
                                 <a href="{{ asset($student->group->laporan_file) }}" target="_blank" class="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold transition-all shadow-sm">
@@ -78,6 +67,100 @@
                     @endif
                 </div>
             </div>
+
+            <!-- Progress Per Bagian/Bab Card -->
+            @if($student->group && $student->group->status === 'approved')
+                @php
+                    $sections = [
+                        'Pendahuluan / Latar Belakang',
+                        'Tinjauan Pustaka / Landasan Teori',
+                        'Metodologi / Perancangan Sistem',
+                        'Analisis dan Pembahasan',
+                        'Kesimpulan dan Saran',
+                        'Lainnya'
+                    ];
+                @endphp
+                <div class="bg-white border border-slate-200/80 rounded-2xl p-6 shadow-sm">
+                    <h4 class="text-sm font-bold text-slate-800 border-b border-slate-100 pb-3 mb-5 flex items-center justify-between">
+                        <span>Progress Kelompok Per Bab</span>
+                        <span class="text-[10px] text-slate-400 font-normal">Sesuai Logbook</span>
+                    </h4>
+                    
+                    <div class="space-y-3">
+                        @foreach($sections as $sec)
+                            @php
+                                $secLogs = $groupLogbooks->filter(fn($l) => $l->section === $sec);
+                                $hasApproved = $secLogs->contains('status', 'approved');
+                                $hasPending = $secLogs->contains('status', 'pending');
+                                $hasRejected = $secLogs->contains('status', 'rejected');
+                                
+                                // Find latest documentation
+                                $latestDoc = $secLogs->whereNotNull('documentation')->sortByDesc('date')->first()?->documentation;
+                            @endphp
+                            
+                            <div class="flex items-center justify-between p-3.5 border rounded-xl transition-all
+                                @if($hasApproved) bg-emerald-50/10 border-emerald-100/80 hover:bg-emerald-50/20
+                                @elseif($hasPending) bg-amber-50/10 border-amber-100/80 hover:bg-amber-50/20
+                                @elseif($hasRejected) bg-red-50/10 border-red-100/80 hover:bg-red-50/20
+                                @else bg-slate-50/30 border-slate-200/50 hover:bg-slate-50/60 @endif">
+                                
+                                <div class="flex items-center gap-2.5">
+                                    <!-- Icon Status Left -->
+                                    <div class="w-7 h-7 rounded-lg flex items-center justify-center shrink-0
+                                        @if($hasApproved) bg-emerald-100 text-emerald-700
+                                        @elseif($hasPending) bg-amber-100 text-amber-700
+                                        @elseif($hasRejected) bg-red-100 text-red-700
+                                        @else bg-slate-100 text-slate-400 @endif">
+                                        @if($hasApproved)
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                                        @elseif($hasPending)
+                                            <svg class="w-3.5 h-3.5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                                        @elseif($hasRejected)
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
+                                        @else
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                                        @endif
+                                    </div>
+                                    
+                                    <div class="space-y-0.5">
+                                        <span class="block text-xs font-bold text-slate-800 leading-tight">{{ $sec }}</span>
+                                        <div class="flex flex-wrap items-center gap-x-2 gap-y-0.5">
+                                            <span class="text-[10px] text-slate-400">Total: {{ $secLogs->count() }} Log</span>
+                                            @if($latestDoc)
+                                                <span class="text-[10px] text-slate-300">•</span>
+                                                <a href="{{ asset($latestDoc) }}" target="_blank" class="text-[10px] font-bold text-emerald-600 hover:text-emerald-700 hover:underline inline-flex items-center gap-0.5">
+                                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                                                    Unduh Berkas
+                                                </a>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="shrink-0 pl-1.5">
+                                    @if($hasApproved)
+                                        <span class="px-2 py-0.5 rounded-md text-[9px] font-extrabold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200/50 whitespace-nowrap">
+                                            Selesai
+                                        </span>
+                                    @elseif($hasPending)
+                                        <span class="px-2 py-0.5 rounded-md text-[9px] font-extrabold uppercase tracking-wider bg-amber-50 text-amber-700 border border-amber-200/50 whitespace-nowrap">
+                                            Review
+                                        </span>
+                                    @elseif($hasRejected)
+                                        <span class="px-2 py-0.5 rounded-md text-[9px] font-extrabold uppercase tracking-wider bg-red-50 text-red-700 border border-red-200/50 whitespace-nowrap">
+                                            Revisi
+                                        </span>
+                                    @else
+                                        <span class="px-2 py-0.5 rounded-md text-[9px] font-extrabold uppercase tracking-wider bg-slate-100/80 text-slate-400 border border-slate-200/40 whitespace-nowrap">
+                                            Belum Mulai
+                                        </span>
+                                    @endif
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
 
             <!-- Grading / Evaluation Card -->
             @if($student->group)
@@ -153,9 +236,16 @@
                                     </div>
 
                                     <div class="flex items-center justify-between gap-3 pl-2">
-                                        <div class="flex items-center gap-2">
-                                            <span class="font-bold text-slate-800 text-sm">{{ $log->date->format('d M Y') }}</span>
-                                            <span class="text-xs text-slate-400">({{ $log->date->locale('id')->dayName }})</span>
+                                        <div class="flex flex-col gap-1">
+                                            <div class="flex items-center gap-2">
+                                                <span class="font-bold text-slate-800 text-sm">{{ $log->date->format('d M Y') }}</span>
+                                                <span class="text-xs text-slate-400">({{ $log->date->locale('id')->dayName }})</span>
+                                            </div>
+                                            @if($log->section)
+                                                <span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-100 rounded-lg px-2 py-0.5 self-start">
+                                                    Bagian: {{ $log->section }}
+                                                </span>
+                                            @endif
                                         </div>
                                         
                                         <div>
@@ -174,11 +264,13 @@
                                         {{ $log->activity }}
                                     </div>
 
-                                    <!-- Image Display -->
+                                    <!-- File Display -->
                                     @if($log->documentation)
                                         <div class="pl-2">
-                                            <a href="{{ asset($log->documentation) }}" target="_blank" class="inline-block relative overflow-hidden rounded-xl border border-slate-200 max-w-xs shadow-sm bg-white">
-                                                <img src="{{ asset($log->documentation) }}" alt="Dokumentasi" class="max-h-32 object-cover">
+                                            <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Berkas Pendukung / File Progress</span>
+                                            <a href="{{ asset($log->documentation) }}" target="_blank" class="inline-flex items-center gap-2 px-3 py-2 bg-white border border-slate-200/80 hover:border-emerald-500 rounded-xl text-xs font-bold text-slate-700 hover:text-emerald-700 transition-colors shadow-sm">
+                                                <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                                                Unduh / Lihat Berkas ({{ strtoupper(pathinfo($log->documentation, PATHINFO_EXTENSION)) }})
                                             </a>
                                         </div>
                                     @endif
@@ -207,7 +299,13 @@
                                                     "{{ $log->dosen_note }}"
                                                 </div>
                                             @else
-                                                <span class="text-[10px] text-slate-400 italic font-medium">Disetujui tanpa catatan khusus.</span>
+                                                <span class="text-[10px] text-slate-400 italic font-medium">
+                                                    @if($log->status === 'approved')
+                                                        Disetujui tanpa catatan khusus.
+                                                    @else
+                                                        Ditolak tanpa catatan khusus.
+                                                    @endif
+                                                </span>
                                             @endif
                                         @endif
                                     </div>
@@ -249,6 +347,11 @@
                                                     <div class="text-[10px] text-slate-400 mt-0.5">
                                                         {{ $log->date->format('d M Y') }} &bull; {{ $log->date->locale('id')->dayName }}
                                                     </div>
+                                                    @if($log->section)
+                                                        <span class="mt-1 block text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-100 rounded-lg px-2 py-0.5 self-start">
+                                                            Bagian: {{ $log->section }}
+                                                        </span>
+                                                    @endif
                                                 </div>
                                             </div>
                                             
@@ -268,11 +371,13 @@
                                             {{ $log->activity }}
                                         </div>
 
-                                        <!-- Image Display -->
+                                        <!-- File Display -->
                                         @if($log->documentation)
                                             <div class="pl-2">
-                                                <a href="{{ asset($log->documentation) }}" target="_blank" class="inline-block relative overflow-hidden rounded-xl border border-slate-200 max-w-xs shadow-sm bg-white">
-                                                    <img src="{{ asset($log->documentation) }}" alt="Dokumentasi" class="max-h-32 object-cover">
+                                                <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Berkas Pendukung / File Progress</span>
+                                                <a href="{{ asset($log->documentation) }}" target="_blank" class="inline-flex items-center gap-2 px-3 py-2 bg-white border border-slate-200/80 hover:border-emerald-500 rounded-xl text-xs font-bold text-slate-700 hover:text-emerald-700 transition-colors shadow-sm">
+                                                    <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                                                    Unduh / Lihat Berkas ({{ strtoupper(pathinfo($log->documentation, PATHINFO_EXTENSION)) }})
                                                 </a>
                                             </div>
                                         @endif
@@ -301,7 +406,13 @@
                                                         "{{ $log->dosen_note }}"
                                                     </div>
                                                 @else
-                                                    <span class="text-[10px] text-slate-400 italic font-medium">Disetujui tanpa catatan khusus.</span>
+                                                    <span class="text-[10px] text-slate-400 italic font-medium">
+                                                        @if($log->status === 'approved')
+                                                            Disetujui tanpa catatan khusus.
+                                                        @else
+                                                            Ditolak tanpa catatan khusus.
+                                                        @endif
+                                                    </span>
                                                 @endif
                                             @endif
                                         </div>

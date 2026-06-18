@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('mahasiswa_id')->constrained('users')->onDelete('cascade');
             $table->date('date');
             $table->text('activity');
+            $table->string('section')->nullable();
             $table->string('documentation')->nullable();
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->text('dosen_note')->nullable();

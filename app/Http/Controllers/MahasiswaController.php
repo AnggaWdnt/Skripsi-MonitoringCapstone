@@ -28,8 +28,11 @@ class MahasiswaController extends Controller
         
         // Load evaluation score (using group final score or individual)
         $evaluasi = $group;
+        
+        // Load all logbooks of group members to show visual section checklist/progress
+        $groupLogbooks = $group ? Logbook::whereIn('mahasiswa_id', $group->members->pluck('id'))->get() : collect();
 
-        return view('mahasiswa.dashboard', compact('user', 'group', 'totalLogs', 'approvedLogs', 'pendingLogs', 'dosen', 'evaluasi'));
+        return view('mahasiswa.dashboard', compact('user', 'group', 'totalLogs', 'approvedLogs', 'pendingLogs', 'dosen', 'evaluasi', 'groupLogbooks'));
     }
 
     /**
@@ -62,36 +65,18 @@ class MahasiswaController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'survey_file' => ($group->survey_file ? 'nullable' : 'required') . '|mimes:pdf|max:2048',
         ], [
             'title.required' => 'Judul Capstone wajib diisi.',
             'description.required' => 'Deskripsi proyek Capstone wajib diisi.',
-            'survey_file.required' => 'Silakan unggah bukti dokumen survei lapangan (PDF).',
-            'survey_file.mimes' => 'Bukti survei harus berupa file PDF.',
-            'survey_file.max' => 'Ukuran file bukti survei maksimal 2MB.',
         ]);
 
-        $surveyPath = $group->survey_file;
-        if ($request->hasFile('survey_file')) {
-            // Delete old file if exists
-            if ($group->survey_file && file_exists(public_path($group->survey_file))) {
-                @unlink(public_path($group->survey_file));
-            }
-            
-            $file = $request->file('survey_file');
-            $filename = 'survey_group_' . $group->id . '_' . time() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('uploads/survey'), $filename);
-            $surveyPath = 'uploads/survey/' . $filename;
-        }
-        
         $group->update([
             'title' => $request->title,
             'description' => $request->description,
-            'survey_file' => $surveyPath,
             'status' => 'pending',
         ]);
 
-        return redirect()->route('mahasiswa.dashboard')->with('success', 'Judul Capstone dan bukti survei berhasil diajukan. Menunggu verifikasi Program Studi.');
+        return redirect()->route('mahasiswa.dashboard')->with('success', 'Judul Capstone berhasil diajukan. Menunggu verifikasi Program Studi.');
     }
 
     /**
@@ -117,17 +102,19 @@ class MahasiswaController extends Controller
         return view('mahasiswa.logbook.index', compact('user', 'logbooks'));
     }
 
-    /**
-     * Store new logbook entry.
-     */
     public function storeLogbook(Request $request)
     {
         $request->validate([
-            'date' => 'required|date',
+            'date' => 'required|date|date_format:Y-m-d|after_or_equal:today|before_or_equal:today',
+            'section' => 'required|string|max:255',
             'activity' => 'required|string',
-            'documentation' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'documentation' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,zip,rar|max:5120',
         ], [
-            'documentation.max' => 'Ukuran gambar dokumentasi maksimal adalah 2MB.',
+            'date.after_or_equal' => 'Anda tidak diperbolehkan mengunggah logbook untuk tanggal sebelumnya (hari lampau).',
+            'date.before_or_equal' => 'Anda tidak diperbolehkan mengunggah logbook untuk tanggal di masa depan.',
+            'section.required' => 'Bagian laporan wajib dipilih.',
+            'documentation.mimes' => 'Format file dokumen tidak didukung. Unggah file PDF, Word, Excel, PPT, atau ZIP/RAR.',
+            'documentation.max' => 'Ukuran file dokumen maksimal adalah 5MB.',
         ]);
 
         $user = Auth::user();
@@ -143,6 +130,7 @@ class MahasiswaController extends Controller
         Logbook::create([
             'mahasiswa_id' => $user->id,
             'date' => $request->date,
+            'section' => $request->section,
             'activity' => $request->activity,
             'documentation' => $docPath,
             'status' => 'pending',

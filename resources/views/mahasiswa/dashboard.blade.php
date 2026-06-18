@@ -58,7 +58,7 @@
                         </div>
                         <div>
                             <h4 class="font-bold text-sm {{ in_array($group->status, ['approved', 'pending']) || $group->laporan_file ? 'text-slate-800' : 'text-slate-500' }}">Pengajuan Judul</h4>
-                            <p class="text-xs text-slate-400 mt-0.5">Judul & bukti survei lapangan</p>
+                            <p class="text-xs text-slate-400 mt-0.5">Pengusulan judul kelompok</p>
                         </div>
                     </div>
 
@@ -122,86 +122,172 @@
 
         <!-- Main Grid -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <!-- Capstone Details Card -->
-            <div class="bg-white border border-slate-200/80 rounded-2xl shadow-sm p-6 lg:col-span-2">
-                <h3 class="text-lg font-bold text-slate-800 mb-6 pb-3 border-b border-slate-100 flex items-center justify-between">
-                    <span>Detail Proyek Capstone Kelompok</span>
-                    @if($group->status !== 'approved')
-                        <a href="{{ route('mahasiswa.pengajuan') }}" class="text-xs font-semibold text-emerald-600 hover:text-emerald-500 transition-colors">
-                            {{ $group->status === 'belum_mengajukan' ? 'Ajukan Judul' : 'Edit Pengajuan' }}
-                        </a>
-                    @endif
-                </h3>
-                
-                @if($group->status === 'belum_mengajukan')
-                    <div class="text-center py-8">
-                        <p class="text-slate-500 text-sm">Kelompok Anda belum mengajukan Judul Capstone dan Bukti Survei Lapangan.</p>
-                        <a href="{{ route('mahasiswa.pengajuan') }}" class="mt-4 inline-block px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-bold rounded-xl shadow-md transition-all">
-                            Ajukan Judul & Berkas Survei
-                        </a>
-                    </div>
-                @else
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="space-y-4">
-                            <div>
-                                <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Nama Kelompok</span>
-                                <span class="text-sm font-bold text-slate-800 mt-1 block">{{ $group->group_name }}</span>
-                            </div>
-                            <div>
-                                <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Judul Capstone</span>
-                                <span class="text-sm font-bold text-slate-800 mt-1 block">{{ $group->title }}</span>
-                            </div>
-                            <div>
-                                <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Deskripsi Singkat / Abstrak</span>
-                                <p class="text-sm text-slate-600 mt-1 block leading-relaxed">{{ $group->description }}</p>
-                            </div>
-                            <div>
-                                <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Berkas Survei Lapangan (PDF)</span>
-                                @if($group->survey_file)
-                                    <a href="{{ asset($group->survey_file) }}" target="_blank" class="text-sm font-semibold text-emerald-600 hover:text-emerald-500 transition-colors inline-flex items-center gap-1.5 mt-1">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                                        Lihat Berkas Survei
-                                    </a>
-                                @else
-                                    <span class="text-sm text-slate-400 mt-1 block">Belum Diunggah</span>
-                                @endif
-                            </div>
+            <!-- Left Column: Capstone Details & Section Progress -->
+            <div class="lg:col-span-2 space-y-6">
+                <!-- Capstone Details Card -->
+                <div class="bg-white border border-slate-200/80 rounded-2xl shadow-sm p-6">
+                    <h3 class="text-lg font-bold text-slate-800 mb-6 pb-3 border-b border-slate-100 flex items-center justify-between">
+                        <span>Detail Proyek Capstone Kelompok</span>
+                        @if($group->status !== 'approved')
+                            <a href="{{ route('mahasiswa.pengajuan') }}" class="text-xs font-semibold text-emerald-600 hover:text-emerald-500 transition-colors">
+                                {{ $group->status === 'belum_mengajukan' ? 'Ajukan Judul' : 'Edit Pengajuan' }}
+                            </a>
+                        @endif
+                    </h3>
+                    
+                    @if($group->status === 'belum_mengajukan')
+                        <div class="text-center py-8">
+                            <p class="text-slate-500 text-sm">Kelompok Anda belum mengajukan Judul Capstone.</p>
+                            <a href="{{ route('mahasiswa.pengajuan') }}" class="mt-4 inline-block px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-bold rounded-xl shadow-md transition-all">
+                                Ajukan Judul
+                            </a>
                         </div>
-
-                        <div class="space-y-4">
-                            <div>
-                                <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Dosen Pembimbing</span>
-                                <span class="text-sm font-bold text-slate-800 mt-1 block">
-                                    {{ $dosen ? $dosen->name : 'Belum Ditentukan' }}
-                                </span>
-                            </div>
-                            <div>
-                                <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Anggota Kelompok</span>
-                                <div class="mt-2 space-y-2">
-                                    @foreach($group->members as $member)
-                                        <div class="flex items-center justify-between p-2.5 bg-slate-50 border border-slate-200/60 rounded-xl">
-                                            <div>
-                                                <span class="text-xs font-bold text-slate-800 block">{{ $member->name }}</span>
-                                                <span class="text-[10px] text-slate-500 block">NIM: {{ $member->nim }}</span>
-                                            </div>
-                                            @if($member->id === $user->id)
-                                                <span class="text-[9px] font-bold bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full">Saya</span>
-                                            @endif
-                                        </div>
-                                    @endforeach
+                    @else
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="space-y-4">
+                                <div>
+                                    <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Nama Kelompok</span>
+                                    <span class="text-sm font-bold text-slate-800 mt-1 block">{{ $group->group_name }}</span>
+                                </div>
+                                <div>
+                                    <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Judul Capstone</span>
+                                    <span class="text-sm font-bold text-slate-800 mt-1 block">{{ $group->title }}</span>
+                                </div>
+                                <div>
+                                    <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Deskripsi Singkat / Abstrak</span>
+                                    <p class="text-sm text-slate-600 mt-1 block leading-relaxed">{{ $group->description }}</p>
                                 </div>
                             </div>
-                            <div>
-                                <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Laporan Akhir Capstone</span>
-                                @if($group->laporan_file)
-                                    <a href="{{ asset($group->laporan_file) }}" target="_blank" class="text-sm font-semibold text-emerald-600 hover:text-emerald-500 transition-colors inline-flex items-center gap-1.5 mt-1">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                                        Lihat File Laporan
-                                    </a>
-                                @else
-                                    <span class="text-sm text-slate-400 mt-1 block">Belum Diunggah</span>
-                                @endif
+
+                            <div class="space-y-4">
+                                <div>
+                                    <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Dosen Pembimbing</span>
+                                    <span class="text-sm font-bold text-slate-800 mt-1 block">
+                                        {{ $dosen ? $dosen->name : 'Belum Ditentukan' }}
+                                    </span>
+                                </div>
+                                <div>
+                                    <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Anggota Kelompok</span>
+                                    <div class="mt-2 space-y-2">
+                                        @foreach($group->members as $member)
+                                            <div class="flex items-center justify-between p-2.5 bg-slate-50 border border-slate-200/60 rounded-xl">
+                                                <div>
+                                                    <span class="text-xs font-bold text-slate-800 block">{{ $member->name }}</span>
+                                                    <span class="text-[10px] text-slate-500 block">NIM: {{ $member->nim }}</span>
+                                                </div>
+                                                @if($member->id === $user->id)
+                                                    <span class="text-[9px] font-bold bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full">Saya</span>
+                                                @endif
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                                <div>
+                                    <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Laporan Akhir Capstone</span>
+                                    @if($group->laporan_file)
+                                        <a href="{{ asset($group->laporan_file) }}" target="_blank" class="text-sm font-semibold text-emerald-600 hover:text-emerald-500 transition-colors inline-flex items-center gap-1.5 mt-1">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                                            Lihat File Laporan
+                                        </a>
+                                    @else
+                                        <span class="text-sm text-slate-400 mt-1 block">Belum Diunggah</span>
+                                    @endif
+                                </div>
                             </div>
+                        </div>
+                    @endif
+                </div>
+
+                <!-- Progress Per Bagian/Bab Card -->
+                @if($group->status === 'approved')
+                    @php
+                        $sections = [
+                            'Pendahuluan / Latar Belakang',
+                            'Tinjauan Pustaka / Landasan Teori',
+                            'Metodologi / Perancangan Sistem',
+                            'Analisis dan Pembahasan',
+                            'Kesimpulan dan Saran',
+                            'Lainnya'
+                        ];
+                    @endphp
+                    <div class="bg-white border border-slate-200/80 rounded-2xl shadow-sm p-6">
+                        <h3 class="text-base font-bold text-slate-800 mb-6 pb-3 border-b border-slate-100 flex items-center justify-between">
+                            <span>Progress Capstone Per Bagian / Bab</span>
+                            <span class="text-xs text-slate-400 font-normal">Dipantau real-time dari Logbook</span>
+                        </h3>
+                        
+                        <div class="grid grid-cols-1 gap-3">
+                            @foreach($sections as $sec)
+                                @php
+                                    $secLogs = $groupLogbooks->filter(fn($l) => $l->section === $sec);
+                                    $hasApproved = $secLogs->contains('status', 'approved');
+                                    $hasPending = $secLogs->contains('status', 'pending');
+                                    $hasRejected = $secLogs->contains('status', 'rejected');
+                                    
+                                    // Find latest documentation
+                                    $latestDoc = $secLogs->whereNotNull('documentation')->sortByDesc('date')->first()?->documentation;
+                                @endphp
+                                
+                                <div class="flex items-center justify-between p-4 border rounded-xl transition-all
+                                    @if($hasApproved) bg-emerald-50/10 border-emerald-100/80 hover:bg-emerald-50/20
+                                    @elseif($hasPending) bg-amber-50/10 border-amber-100/80 hover:bg-amber-50/20
+                                    @elseif($hasRejected) bg-red-50/10 border-red-100/80 hover:bg-red-50/20
+                                    @else bg-slate-50/30 border-slate-200/50 hover:bg-slate-50/60 @endif">
+                                    
+                                    <div class="flex items-center gap-3">
+                                        <!-- Icon Status Left -->
+                                        <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0
+                                            @if($hasApproved) bg-emerald-100 text-emerald-700
+                                            @elseif($hasPending) bg-amber-100 text-amber-700
+                                            @elseif($hasRejected) bg-red-100 text-red-700
+                                            @else bg-slate-100 text-slate-400 @endif">
+                                            @if($hasApproved)
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                                            @elseif($hasPending)
+                                                <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                                            @elseif($hasRejected)
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
+                                            @else
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                                            @endif
+                                        </div>
+                                        
+                                        <div class="space-y-0.5">
+                                            <span class="block text-xs font-bold text-slate-800 leading-tight">{{ $sec }}</span>
+                                            <div class="flex flex-wrap items-center gap-x-2 gap-y-0.5">
+                                                <span class="text-[10px] text-slate-400">Total: {{ $secLogs->count() }} Logbook</span>
+                                                @if($latestDoc)
+                                                    <span class="text-[10px] text-slate-300">•</span>
+                                                    <a href="{{ asset($latestDoc) }}" target="_blank" class="text-[10px] font-bold text-emerald-600 hover:text-emerald-700 hover:underline inline-flex items-center gap-0.5">
+                                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                                                        Unduh Berkas Terbaru
+                                                    </a>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="shrink-0 pl-2">
+                                        @if($hasApproved)
+                                            <span class="px-2.5 py-1 rounded-md text-[9px] font-extrabold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200/50 whitespace-nowrap">
+                                                Selesai
+                                            </span>
+                                        @elseif($hasPending)
+                                            <span class="px-2.5 py-1 rounded-md text-[9px] font-extrabold uppercase tracking-wider bg-amber-50 text-amber-700 border border-amber-200/50 whitespace-nowrap">
+                                                Review
+                                            </span>
+                                        @elseif($hasRejected)
+                                            <span class="px-2.5 py-1 rounded-md text-[9px] font-extrabold uppercase tracking-wider bg-red-50 text-red-700 border border-red-200/50 whitespace-nowrap">
+                                                Revisi
+                                            </span>
+                                        @else
+                                            <span class="px-2.5 py-1 rounded-md text-[9px] font-extrabold uppercase tracking-wider bg-slate-100/80 text-slate-400 border border-slate-200/40 whitespace-nowrap">
+                                                Belum Mulai
+                                            </span>
+                                        @endif
+                                    </div>
+                                </div>
+                            @endforeach
                         </div>
                     </div>
                 @endif

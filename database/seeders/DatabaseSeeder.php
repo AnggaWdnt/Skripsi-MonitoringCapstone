@@ -55,11 +55,14 @@ class DatabaseSeeder extends Seeder
             'prodi' => 'Teknologi Informasi',
         ]);
 
-        // Create Capstone Group (assigned by Prodi)
+        // Create Capstone Group 1 (assigned by Prodi) - Approved
         $group = \App\Models\Group::create([
             'group_name' => 'Kelompok Capstone TI-01',
+            'theme' => 'Internet of Things (IoT)',
             'dosen_id' => $dosen->id,
-            'status' => 'belum_mengajukan',
+            'title' => 'Sistem Monitoring Kinerja Panel Surya Berbasis Internet of Things (IoT)',
+            'description' => 'Sistem pemantauan parameter kelistrikan panel surya secara real-time menggunakan protokol MQTT dan divisualisasikan dalam bentuk web dashboard.',
+            'status' => 'approved',
         ]);
 
         // Create Mahasiswa 1 (Angga)
@@ -88,17 +91,52 @@ class DatabaseSeeder extends Seeder
             'group_id' => $group->id,
         ]);
 
+        // Seed Logbooks for Group 1 (Angga and Budi)
+        $angga = User::where('email', 'mahasiswa@gmail.com')->first();
+        $budi = User::where('email', 'budi@gmail.com')->first();
+
+        // 1. Pendahuluan for Group 1 -> Selesai
+        \App\Models\Logbook::create([
+            'mahasiswa_id' => $angga->id,
+            'date' => now()->subDays(5),
+            'activity' => 'Melakukan studi literatur mengenai arsitektur sistem monitoring IoT panel surya.',
+            'section' => 'Pendahuluan / Latar Belakang',
+            'documentation' => 'uploads/laporan/bab1_pendahuluan_iot.pdf',
+            'status' => 'approved',
+            'dosen_note' => 'Pendahuluan sudah terstruktur dengan baik.',
+        ]);
+
+        // 2. Tinjauan Pustaka for Group 1 -> Selesai
+        \App\Models\Logbook::create([
+            'mahasiswa_id' => $budi->id,
+            'date' => now()->subDays(3),
+            'activity' => 'Mengkaji teori sensor arus ACS712, sensor tegangan, dan mikrokontroler ESP32.',
+            'section' => 'Tinjauan Pustaka / Landasan Teori',
+            'documentation' => 'uploads/laporan/bab2_tinjauan_pustaka_iot.pdf',
+            'status' => 'approved',
+        ]);
+
+        // 3. Metodologi for Group 1 -> Review
+        \App\Models\Logbook::create([
+            'mahasiswa_id' => $angga->id,
+            'date' => now()->subDay(),
+            'activity' => 'Merancang skema perkabelan hardware IoT dan topologi jaringan komunikasi MQTT.',
+            'section' => 'Metodologi / Perancangan Sistem',
+            'documentation' => 'uploads/laporan/bab3_metodologi_iot.docx',
+            'status' => 'pending',
+        ]);
+
         // Dosen 2 Siti Aminah
         $dosen2 = User::where('email', 'siti@gmail.com')->first();
 
-        // Create Group 2 (TI-02, pending title approval)
+        // Create Group 2 (TI-02, approved title)
         $group2 = \App\Models\Group::create([
             'group_name' => 'Kelompok Capstone TI-02',
+            'theme' => 'Kecerdasan Buatan (AI)',
             'dosen_id' => $dosen2->id,
             'title' => 'Sistem Rekomendasi Destinasi Wisata Menggunakan Collaborative Filtering',
             'description' => 'Aplikasi web untuk memberikan rekomendasi destinasi wisata di Yogyakarta berdasarkan rating pengguna lain.',
-            'survey_file' => 'uploads/survey/dummy_survey.pdf',
-            'status' => 'pending',
+            'status' => 'approved',
         ]);
 
         // Mahasiswa 3 (Dewi - Member of Group 2)
@@ -140,34 +178,144 @@ class DatabaseSeeder extends Seeder
             'group_id' => null,
         ]);
 
-        // Create logbooks for Dewi
+        // Create logbooks for Dewi & Eko (Group 2) covering ALL 6 SECTIONS
         $dewi = User::where('email', 'dewi@gmail.com')->first();
+        $eko = User::where('email', 'eko@gmail.com')->first();
+        
+        // 1. Pendahuluan / Latar Belakang -> Selesai (Approved)
         \App\Models\Logbook::create([
             'mahasiswa_id' => $dewi->id,
-            'date' => now()->subDays(2),
-            'activity' => 'Melakukan survei lapangan ke beberapa destinasi wisata di Yogyakarta untuk mengumpulkan data rating awal.',
+            'date' => now()->subDays(10),
+            'activity' => 'Melakukan analisis latar belakang masalah perlunya sistem rekomendasi pariwisata di Yogyakarta.',
+            'section' => 'Pendahuluan / Latar Belakang',
+            'documentation' => 'uploads/laporan/draft_bab1_pendahuluan.pdf',
             'status' => 'approved',
+            'dosen_note' => 'Latar belakang masalah sudah sangat jelas dan relevan.',
         ]);
+
+        // 2. Tinjauan Pustaka / Landasan Teori -> Selesai (Approved)
         \App\Models\Logbook::create([
             'mahasiswa_id' => $dewi->id,
-            'date' => now()->subDay(),
-            'activity' => 'Mulai menyusun bab 1 pendahuluan dan mendefinisikan rumusan masalah proyek Capstone.',
+            'date' => now()->subDays(8),
+            'activity' => 'Mengkaji referensi jurnal terkait metode Collaborative Filtering dan algoritma rekomendasi pariwisata.',
+            'section' => 'Tinjauan Pustaka / Landasan Teori',
+            'documentation' => 'uploads/laporan/draft_bab2_tinjauan_pustaka.pdf',
+            'status' => 'approved',
+            'dosen_note' => 'Teori yang digunakan sudah sangat lengkap.',
+        ]);
+        
+        // 3. Metodologi / Perancangan Sistem -> Selesai (Approved)
+        \App\Models\Logbook::create([
+            'mahasiswa_id' => $eko->id,
+            'date' => now()->subDays(6),
+            'activity' => 'Membuat flowchart perancangan sistem dan rancangan database menggunakan Entity Relationship Diagram (ERD).',
+            'section' => 'Metodologi / Perancangan Sistem',
+            'documentation' => 'uploads/laporan/draft_bab3_metodologi.docx',
+            'status' => 'approved',
+            'dosen_note' => 'Rancangan ERD sudah dinormalisasi dengan baik.',
+        ]);
+
+        // 4. Analisis dan Pembahasan -> Review (Pending)
+        \App\Models\Logbook::create([
+            'mahasiswa_id' => $eko->id,
+            'date' => now()->subDays(4),
+            'activity' => 'Mengimplementasikan algoritma Collaborative Filtering menggunakan data rating 50 responden awal.',
+            'section' => 'Analisis dan Pembahasan',
+            'documentation' => 'uploads/laporan/draft_bab4_analisis_pembahasan.docx',
             'status' => 'pending',
         ]);
 
-        // Create logbooks for Eko
-        $eko = User::where('email', 'eko@gmail.com')->first();
+        // 5. Kesimpulan dan Saran -> Revisi (Rejected)
         \App\Models\Logbook::create([
-            'mahasiswa_id' => $eko->id,
+            'mahasiswa_id' => $dewi->id,
             'date' => now()->subDays(2),
-            'activity' => 'Mempelajari algoritma Collaborative Filtering dan membuat prototipe sederhana sistem rekomendasi di Python.',
-            'status' => 'approved',
+            'activity' => 'Menyusun draft kesimpulan proyek Capstone berdasarkan hasil evaluasi akurasi sistem rekomendasi.',
+            'section' => 'Kesimpulan dan Saran',
+            'documentation' => 'uploads/laporan/draft_bab5_kesimpulan.docx',
+            'status' => 'rejected',
+            'dosen_note' => 'Kesimpulan belum menjawab seluruh rumusan masalah. Silakan direvisi.',
         ]);
+
+        // 6. Lainnya -> Review (Pending)
         \App\Models\Logbook::create([
             'mahasiswa_id' => $eko->id,
-            'date' => now(),
-            'activity' => 'Mengintegrasikan database SQLite awal untuk menyimpan preferensi rating destinasi wisata.',
+            'date' => now()->subDay(),
+            'activity' => 'Menyusun daftar pustaka (menggunakan Mendeley/APA style) dan lampiran kode sumber aplikasi.',
+            'section' => 'Lainnya',
+            'documentation' => 'uploads/laporan/draft_lampiran.zip',
             'status' => 'pending',
+        ]);
+
+        // Create Group 3 (TI-03, pending title) - Supervised by Dosen 1 (Bambang)
+        $group3 = \App\Models\Group::create([
+            'group_name' => 'Kelompok Capstone TI-03',
+            'theme' => 'Sistem Cerdas & Internet of Things (IoT)',
+            'dosen_id' => $dosen->id,
+            'title' => 'Rancang Bangun Sistem Smart Agriculture Berbasis IoT dan Machine Learning',
+            'description' => 'Sistem cerdas untuk mendeteksi kelembaban tanah dan mengontrol irigasi tanaman pangan secara otomatis.',
+            'status' => 'pending',
+        ]);
+
+        // Mahasiswa 6 (Faris - Member of Group 3)
+        User::create([
+            'name' => 'Faris Rahman',
+            'email' => 'faris@gmail.com',
+            'password' => bcrypt('password'),
+            'role' => 'mahasiswa',
+            'nim' => '20220145',
+            'prodi' => 'Teknologi Informasi',
+            'angkatan' => '2022',
+            'status_pkl' => 'belum',
+            'group_id' => $group3->id,
+        ]);
+
+        // Mahasiswa 7 (Gita - Member of Group 3)
+        User::create([
+            'name' => 'Gita Amelia',
+            'email' => 'gita@gmail.com',
+            'password' => bcrypt('password'),
+            'role' => 'mahasiswa',
+            'nim' => '20220146',
+            'prodi' => 'Teknologi Informasi',
+            'angkatan' => '2022',
+            'status_pkl' => 'belum',
+            'group_id' => $group3->id,
+        ]);
+
+        // Create Group 4 (TI-04, rejected title) - Supervised by Dosen 2 (Siti)
+        $group4 = \App\Models\Group::create([
+            'group_name' => 'Kelompok Capstone TI-04',
+            'theme' => 'Rekayasa Perangkat Lunak (RPL)',
+            'dosen_id' => $dosen2->id,
+            'title' => 'Sistem Kasir Sederhana Minimarket',
+            'description' => 'Aplikasi kasir berbasis Java desktop untuk mencatat transaksi penjualan harian minimarket.',
+            'status' => 'rejected',
+        ]);
+
+        // Mahasiswa 8 (Hendra - Member of Group 4)
+        User::create([
+            'name' => 'Hendra Wijaya',
+            'email' => 'hendra@gmail.com',
+            'password' => bcrypt('password'),
+            'role' => 'mahasiswa',
+            'nim' => '20220147',
+            'prodi' => 'Teknologi Informasi',
+            'angkatan' => '2022',
+            'status_pkl' => 'belum',
+            'group_id' => $group4->id,
+        ]);
+
+        // Mahasiswa 9 (Indah - Member of Group 4)
+        User::create([
+            'name' => 'Indah Permata',
+            'email' => 'indah@gmail.com',
+            'password' => bcrypt('password'),
+            'role' => 'mahasiswa',
+            'nim' => '20220148',
+            'prodi' => 'Teknologi Informasi',
+            'angkatan' => '2022',
+            'status_pkl' => 'belum',
+            'group_id' => $group4->id,
         ]);
     }
 }

@@ -82,7 +82,10 @@ class DosenController extends Controller
     {
         $request->validate([
             'status' => 'required|in:approved,rejected',
-            'dosen_note' => 'nullable|string',
+            'dosen_note' => $request->status === 'rejected' ? 'required|string|min:5' : 'nullable|string',
+        ], [
+            'dosen_note.required' => 'Catatan revisi wajib diisi jika Anda menolak logbook ini.',
+            'dosen_note.min' => 'Catatan revisi minimal harus 5 karakter agar mahasiswa memahami apa yang perlu direvisi.',
         ]);
 
         $dosen = Auth::user();

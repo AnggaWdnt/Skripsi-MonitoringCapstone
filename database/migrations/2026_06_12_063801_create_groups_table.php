@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('groups', function (Blueprint $table) {
             $table->id();
             $table->string('group_name');
+            $table->string('theme')->nullable();
             $table->string('title')->nullable();
             $table->text('description')->nullable();
             $table->string('survey_file')->nullable();
