@@ -6,6 +6,7 @@ use App\Models\Logbook;
 use App\Models\User;
 use App\Models\Group;
 use App\Models\Prodi;
+use App\Models\Theme;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -281,8 +282,9 @@ class AdminController extends Controller
         $groups = Group::with(['members', 'pembimbing'])->get();
         $dosens = User::where('role', 'dosen')->get();
         $unassignedStudents = User::where('role', 'mahasiswa')->whereNull('group_id')->get();
+        $themes = Theme::orderBy('name')->get();
         
-        return view('admin.kelompok.index', compact('groups', 'dosens', 'unassignedStudents'));
+        return view('admin.kelompok.index', compact('groups', 'dosens', 'unassignedStudents', 'themes'));
     }
 
     /**
@@ -292,7 +294,7 @@ class AdminController extends Controller
     {
         $request->validate([
             'group_name' => 'required|string|max:255|unique:groups,group_name',
-            'theme' => 'required|string|in:peningkatan layanan pendidikan formal informal,perbaikan atau peningkatan proses monitoring dan layanan publik,peningkatan produktivitas umkm,peningkatan produktivitas pertanian perikanan perkebunan',
+            'theme' => 'required|string|exists:themes,name',
             'dosen_id' => 'nullable|exists:users,id',
             'member_ids' => 'nullable|array',
             'member_ids.*' => 'exists:users,id',
@@ -300,7 +302,7 @@ class AdminController extends Controller
             'group_name.required' => 'Nama kelompok wajib diisi.',
             'group_name.unique' => 'Nama kelompok sudah digunakan.',
             'theme.required' => 'Tema proyek wajib dipilih.',
-            'theme.in' => 'Tema proyek yang dipilih tidak valid.',
+            'theme.exists' => 'Tema proyek yang dipilih tidak terdaftar.',
         ]);
 
         $group = Group::create([
@@ -329,7 +331,7 @@ class AdminController extends Controller
 
         $request->validate([
             'group_name' => 'required|string|max:255|unique:groups,group_name,' . $group->id,
-            'theme' => 'required|string|in:peningkatan layanan pendidikan formal informal,perbaikan atau peningkatan proses monitoring dan layanan publik,peningkatan produktivitas umkm,peningkatan produktivitas pertanian perikanan perkebunan',
+            'theme' => 'required|string|exists:themes,name',
             'dosen_id' => 'nullable|exists:users,id',
             'member_ids' => 'nullable|array',
             'member_ids.*' => 'exists:users,id',
@@ -337,7 +339,7 @@ class AdminController extends Controller
             'group_name.required' => 'Nama kelompok wajib diisi.',
             'group_name.unique' => 'Nama kelompok sudah digunakan.',
             'theme.required' => 'Tema proyek wajib dipilih.',
-            'theme.in' => 'Tema proyek yang dipilih tidak valid.',
+            'theme.exists' => 'Tema proyek yang dipilih tidak terdaftar.',
         ]);
 
         $group->update([
@@ -457,5 +459,69 @@ class AdminController extends Controller
         $prodi->delete();
 
         return redirect()->back()->with('success', 'Program Studi berhasil dihapus.');
+    }
+
+    /**
+     * List all Themes.
+     */
+    public function temaIndex()
+    {
+        $themes = Theme::orderBy('name')->get();
+        return view('admin.tema.index', compact('themes'));
+    }
+
+    /**
+     * Store new Theme.
+     */
+    public function temaStore(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255|unique:themes,name',
+            'description' => 'nullable|string',
+        ], [
+            'name.required' => 'Nama Tema wajib diisi.',
+            'name.unique' => 'Nama Tema sudah ada.',
+        ]);
+
+        Theme::create([
+            'name' => $request->name,
+            'description' => $request->description,
+        ]);
+
+        return redirect()->back()->with('success', 'Tema baru berhasil ditambahkan.');
+    }
+
+    /**
+     * Update Theme.
+     */
+    public function temaUpdate(Request $request, $id)
+    {
+        $theme = Theme::findOrFail($id);
+
+        $request->validate([
+            'name' => 'required|string|max:255|unique:themes,name,' . $theme->id,
+            'description' => 'nullable|string',
+        ], [
+            'name.required' => 'Nama Tema wajib diisi.',
+            'name.unique' => 'Nama Tema sudah digunakan.',
+        ]);
+
+        $theme->update([
+            'name' => $request->name,
+            'description' => $request->description,
+        ]);
+
+        return redirect()->back()->with('success', 'Tema berhasil diperbarui.');
+    }
+
+    /**
+     * Delete Theme.
+     */
+    public function temaDestroy($id)
+    {
+        $theme = Theme::findOrFail($id);
+        $theme->delete();
+
+        return redirect()->back()->with('success', 'Tema berhasil dihapus.');
     }
 }

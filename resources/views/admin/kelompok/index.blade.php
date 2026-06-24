@@ -134,10 +134,9 @@
                 <select name="theme" id="theme" required
                     class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
                     <option value="" disabled selected>Pilih Tema Proyek</option>
-                    <option value="peningkatan layanan pendidikan formal informal">Peningkatan layanan pendidikan formal informal</option>
-                    <option value="perbaikan atau peningkatan proses monitoring dan layanan publik">Perbaikan atau peningkatan proses monitoring dan layanan publik</option>
-                    <option value="peningkatan produktivitas umkm">Peningkatan produktivitas UMKM</option>
-                    <option value="peningkatan produktivitas pertanian perikanan perkebunan">Peningkatan produktivitas pertanian perikanan perkebunan</option>
+                    @foreach($themes as $theme)
+                        <option value="{{ $theme->name }}">{{ $theme->name }}</option>
+                    @endforeach
                 </select>
             </div>
 
@@ -195,10 +194,9 @@
                 <select name="theme" id="edit_theme" required
                     class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
                     <option value="" disabled selected>Pilih Tema Proyek</option>
-                    <option value="peningkatan layanan pendidikan formal informal">Peningkatan layanan pendidikan formal informal</option>
-                    <option value="perbaikan atau peningkatan proses monitoring dan layanan publik">Perbaikan atau peningkatan proses monitoring dan layanan publik</option>
-                    <option value="peningkatan produktivitas umkm">Peningkatan produktivitas UMKM</option>
-                    <option value="peningkatan produktivitas pertanian perikanan perkebunan">Peningkatan produktivitas pertanian perikanan perkebunan</option>
+                    @foreach($themes as $theme)
+                        <option value="{{ $theme->name }}">{{ $theme->name }}</option>
+                    @endforeach
                 </select>
             </div>
 

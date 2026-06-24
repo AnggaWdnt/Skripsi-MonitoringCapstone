@@ -15,6 +15,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Create Initial Themes
+        $initialThemes = [
+            'peningkatan layanan pendidikan formal informal',
+            'perbaikan atau peningkatan proses monitoring dan layanan publik',
+            'peningkatan produktivitas umkm',
+            'peningkatan produktivitas pertanian perikanan perkebunan',
+        ];
+
+        foreach ($initialThemes as $name) {
+            \App\Models\Theme::create(['name' => $name]);
+        }
+
         // Create Initial Prodis
         $initialProdis = [
             'Teknologi Informasi',

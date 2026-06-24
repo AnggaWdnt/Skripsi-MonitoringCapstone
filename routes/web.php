@@ -69,6 +69,12 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('/prodi/{id}', [AdminController::class, 'prodiUpdate'])->name('prodi.update');
     Route::delete('/prodi/{id}', [AdminController::class, 'prodiDestroy'])->name('prodi.delete');
 
+    // Manage Tema
+    Route::get('/tema', [AdminController::class, 'temaIndex'])->name('tema');
+    Route::post('/tema', [AdminController::class, 'temaStore'])->name('tema.store');
+    Route::post('/tema/{id}', [AdminController::class, 'temaUpdate'])->name('tema.update');
+    Route::delete('/tema/{id}', [AdminController::class, 'temaDestroy'])->name('tema.delete');
+
     // Rekap & Laporan
     Route::get('/laporan', [AdminController::class, 'laporan'])->name('laporan');
 });
