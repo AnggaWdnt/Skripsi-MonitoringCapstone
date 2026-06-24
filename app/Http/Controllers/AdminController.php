@@ -74,7 +74,7 @@ class AdminController extends Controller
             'password' => 'required|string|min:6',
             'nim' => 'required|numeric|unique:users',
             'prodi' => 'required|string',
-            'angkatan' => 'required|string',
+            'angkatan' => 'required|numeric',
             'group_id' => 'nullable|exists:groups,id',
         ], [
             'name.required' => 'Nama mahasiswa wajib diisi.',
@@ -88,6 +88,7 @@ class AdminController extends Controller
             'nim.unique' => 'NIM ini sudah terdaftar.',
             'prodi.required' => 'Program Studi wajib diisi.',
             'angkatan.required' => 'Angkatan wajib diisi.',
+            'angkatan.numeric' => 'Angkatan harus berupa angka.',
         ]);
 
         // Find lecturer supervisor from group if group is assigned
@@ -127,7 +128,7 @@ class AdminController extends Controller
             'email' => 'required|string|email|max:255|unique:users,email,' . $student->id,
             'nim' => 'required|numeric|unique:users,nim,' . $student->id,
             'prodi' => 'required|string',
-            'angkatan' => 'required|string',
+            'angkatan' => 'required|numeric',
             'group_id' => 'nullable|exists:groups,id',
         ], [
             'name.required' => 'Nama mahasiswa wajib diisi.',
@@ -139,6 +140,7 @@ class AdminController extends Controller
             'nim.unique' => 'NIM ini sudah terdaftar.',
             'prodi.required' => 'Program Studi wajib diisi.',
             'angkatan.required' => 'Angkatan wajib diisi.',
+            'angkatan.numeric' => 'Angkatan harus berupa angka.',
         ]);
 
         // Find lecturer supervisor from group if group is assigned

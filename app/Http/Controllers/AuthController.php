@@ -66,7 +66,7 @@ class AuthController extends Controller
             'password' => 'required|string|min:6|confirmed',
             'nim' => 'required|numeric|unique:users',
             'prodi' => 'required|string',
-            'angkatan' => 'required|string',
+            'angkatan' => 'required|numeric',
         ], [
             'name.required' => 'Nama lengkap wajib diisi.',
             'email.required' => 'Email wajib diisi.',
@@ -80,6 +80,7 @@ class AuthController extends Controller
             'nim.unique' => 'NIM sudah terdaftar.',
             'prodi.required' => 'Program Studi wajib diisi.',
             'angkatan.required' => 'Angkatan wajib diisi.',
+            'angkatan.numeric' => 'Angkatan harus berupa angka.',
         ]);
 
         $user = User::create([
