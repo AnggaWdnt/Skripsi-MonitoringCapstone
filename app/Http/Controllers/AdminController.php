@@ -76,6 +76,17 @@ class AdminController extends Controller
             'prodi' => 'required|string',
             'angkatan' => 'required|string',
             'group_id' => 'nullable|exists:groups,id',
+        ], [
+            'name.required' => 'Nama mahasiswa wajib diisi.',
+            'email.required' => 'Email wajib diisi.',
+            'email.email' => 'Format email tidak valid.',
+            'email.unique' => 'Email ini sudah terdaftar.',
+            'password.required' => 'Password wajib diisi.',
+            'password.min' => 'Password minimal terdiri dari 6 karakter.',
+            'nim.required' => 'NIM wajib diisi.',
+            'nim.unique' => 'NIM ini sudah terdaftar.',
+            'prodi.required' => 'Program Studi wajib diisi.',
+            'angkatan.required' => 'Angkatan wajib diisi.',
         ]);
 
         // Find lecturer supervisor from group if group is assigned
@@ -117,6 +128,15 @@ class AdminController extends Controller
             'prodi' => 'required|string',
             'angkatan' => 'required|string',
             'group_id' => 'nullable|exists:groups,id',
+        ], [
+            'name.required' => 'Nama mahasiswa wajib diisi.',
+            'email.required' => 'Email wajib diisi.',
+            'email.email' => 'Format email tidak valid.',
+            'email.unique' => 'Email ini sudah terdaftar.',
+            'nim.required' => 'NIM wajib diisi.',
+            'nim.unique' => 'NIM ini sudah terdaftar.',
+            'prodi.required' => 'Program Studi wajib diisi.',
+            'angkatan.required' => 'Angkatan wajib diisi.',
         ]);
 
         // Find lecturer supervisor from group if group is assigned
@@ -175,6 +195,16 @@ class AdminController extends Controller
             'password' => 'required|string|min:6',
             'nidn' => 'required|string|unique:users',
             'prodi' => 'required|string',
+        ], [
+            'name.required' => 'Nama dosen wajib diisi.',
+            'email.required' => 'Email wajib diisi.',
+            'email.email' => 'Format email tidak valid.',
+            'email.unique' => 'Email ini sudah terdaftar.',
+            'password.required' => 'Password wajib diisi.',
+            'password.min' => 'Password minimal terdiri dari 6 karakter.',
+            'nidn.required' => 'NIDN wajib diisi.',
+            'nidn.unique' => 'NIDN ini sudah terdaftar.',
+            'prodi.required' => 'Program Studi wajib diisi.',
         ]);
 
         User::create([
@@ -201,6 +231,14 @@ class AdminController extends Controller
             'email' => 'required|string|email|max:255|unique:users,email,' . $dosen->id,
             'nidn' => 'required|string|unique:users,nidn,' . $dosen->id,
             'prodi' => 'required|string',
+        ], [
+            'name.required' => 'Nama dosen wajib diisi.',
+            'email.required' => 'Email wajib diisi.',
+            'email.email' => 'Format email tidak valid.',
+            'email.unique' => 'Email ini sudah terdaftar.',
+            'nidn.required' => 'NIDN wajib diisi.',
+            'nidn.unique' => 'NIDN ini sudah terdaftar.',
+            'prodi.required' => 'Program Studi wajib diisi.',
         ]);
 
         $dosen->update([
@@ -253,7 +291,9 @@ class AdminController extends Controller
             'member_ids' => 'nullable|array',
             'member_ids.*' => 'exists:users,id',
         ], [
+            'group_name.required' => 'Nama kelompok wajib diisi.',
             'group_name.unique' => 'Nama kelompok sudah digunakan.',
+            'theme.required' => 'Tema proyek wajib dipilih.',
             'theme.in' => 'Tema proyek yang dipilih tidak valid.',
         ]);
 
@@ -288,6 +328,9 @@ class AdminController extends Controller
             'member_ids' => 'nullable|array',
             'member_ids.*' => 'exists:users,id',
         ], [
+            'group_name.required' => 'Nama kelompok wajib diisi.',
+            'group_name.unique' => 'Nama kelompok sudah digunakan.',
+            'theme.required' => 'Tema proyek wajib dipilih.',
             'theme.in' => 'Tema proyek yang dipilih tidak valid.',
         ]);
 

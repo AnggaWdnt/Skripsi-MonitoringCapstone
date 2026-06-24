@@ -110,9 +110,11 @@ class MahasiswaController extends Controller
             'activity' => 'required|string',
             'documentation' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,zip,rar|max:5120',
         ], [
+            'date.required' => 'Tanggal kegiatan wajib diisi.',
             'date.after_or_equal' => 'Anda tidak diperbolehkan mengunggah logbook untuk tanggal sebelumnya (hari lampau).',
             'date.before_or_equal' => 'Anda tidak diperbolehkan mengunggah logbook untuk tanggal di masa depan.',
             'section.required' => 'Bagian laporan wajib dipilih.',
+            'activity.required' => 'Detail kegiatan harian wajib diisi.',
             'documentation.mimes' => 'Format file dokumen tidak didukung. Unggah file PDF, Word, Excel, PPT, atau ZIP/RAR.',
             'documentation.max' => 'Ukuran file dokumen maksimal adalah 5MB.',
         ]);

@@ -28,6 +28,10 @@ class AuthController extends Controller
         $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required',
+        ], [
+            'email.required' => 'Email wajib diisi.',
+            'email.email' => 'Format email tidak valid.',
+            'password.required' => 'Password wajib diisi.',
         ]);
 
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
@@ -64,11 +68,16 @@ class AuthController extends Controller
             'prodi' => 'required|string',
             'angkatan' => 'required|string',
         ], [
+            'name.required' => 'Nama lengkap wajib diisi.',
+            'email.required' => 'Email wajib diisi.',
+            'email.email' => 'Format email tidak valid.',
             'email.unique' => 'Email ini sudah terdaftar.',
+            'password.required' => 'Password wajib diisi.',
+            'password.min' => 'Password minimal harus 6 karakter.',
+            'password.confirmed' => 'Konfirmasi password tidak cocok.',
             'nim.required' => 'NIM wajib diisi.',
             'nim.unique' => 'NIM sudah terdaftar.',
-            'password.confirmed' => 'Konfirmasi password tidak cocok.',
-            'password.min' => 'Password minimal harus 6 karakter.',
+            'prodi.required' => 'Program Studi wajib diisi.',
             'angkatan.required' => 'Angkatan wajib diisi.',
         ]);
 
