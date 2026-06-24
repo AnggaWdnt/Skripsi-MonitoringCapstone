@@ -85,14 +85,11 @@
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
                                     </button>
                                     
-                                    <!-- Delete Form -->
-                                    <form action="{{ route('admin.mahasiswa.delete', $student->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus mahasiswa ini? Seluruh logbook akan ikut terhapus.')" class="inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="p-1.5 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg transition-colors" title="Hapus Data">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                                        </button>
-                                    </form>
+                                    <!-- Delete Button -->
+                                    <button onclick="openDeleteModal('{{ route('admin.mahasiswa.delete', $student->id) }}', 'Apakah Anda yakin ingin menghapus mahasiswa ini? Seluruh data logbook dan progres PKL/Capstone mahasiswa yang bersangkutan akan ikut terhapus secara permanen.')"
+                                        class="p-1.5 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg transition-colors" title="Hapus Data">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                    </button>
                                 </div>
                             </td>
                         </tr>
@@ -236,10 +233,48 @@
     </div>
 </div>
 
+<!-- Modal: Konfirmasi Hapus -->
+<div id="delete-confirm-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-slate-900/60 backdrop-blur-sm p-4">
+    <div class="bg-white border border-slate-200 rounded-2xl p-6 w-full max-w-md shadow-2xl relative">
+        <button onclick="toggleModal('delete-confirm-modal')" class="absolute top-4 right-4 p-1.5 text-slate-400 hover:text-slate-600 rounded-lg">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+        
+        <div class="flex items-center gap-3 border-b border-slate-100 pb-3 mb-5">
+            <div class="p-2 bg-red-50 text-red-600 rounded-xl">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                </svg>
+            </div>
+            <h3 class="text-base font-bold text-slate-800">Konfirmasi Hapus</h3>
+        </div>
+        
+        <p id="delete-modal-message" class="text-sm text-slate-600 mb-6">Apakah Anda yakin ingin menghapus data ini?</p>
+        
+        <form id="delete-confirm-form" method="POST">
+            @csrf
+            @method('DELETE')
+            <div class="flex items-center justify-end gap-2.5 pt-4 border-t border-slate-100">
+                <button type="button" onclick="toggleModal('delete-confirm-modal')"
+                    class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs">Batal</button>
+                <button type="submit"
+                    class="px-4 py-2 bg-red-600 hover:bg-red-500 text-white font-bold rounded-xl text-xs shadow-md shadow-red-500/10">Hapus</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script>
     function toggleModal(id) {
         const modal = document.getElementById(id);
         modal.classList.toggle('hidden');
+    }
+
+    function openDeleteModal(actionUrl, message) {
+        const form = document.getElementById('delete-confirm-form');
+        form.action = actionUrl;
+        document.getElementById('delete-modal-message').textContent = message;
+        toggleModal('delete-confirm-modal');
     }
 
     function openEditModal(student) {
