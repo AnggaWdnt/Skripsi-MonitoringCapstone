@@ -43,26 +43,26 @@ Route::middleware(['auth', 'role:dosen'])->prefix('dosen')->name('dosen.')->grou
 // Admin Routes
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
-    
+
     // Manage Mahasiswa
     Route::get('/mahasiswa', [AdminController::class, 'mahasiswa'])->name('mahasiswa');
     Route::post('/mahasiswa', [AdminController::class, 'storeMahasiswa'])->name('mahasiswa.store');
     Route::post('/mahasiswa/{id}', [AdminController::class, 'updateMahasiswa'])->name('mahasiswa.update');
     Route::delete('/mahasiswa/{id}', [AdminController::class, 'deleteMahasiswa'])->name('mahasiswa.delete');
-    
+
     // Manage Dosen
     Route::get('/dosen', [AdminController::class, 'dosen'])->name('dosen');
     Route::post('/dosen', [AdminController::class, 'storeDosen'])->name('dosen.store');
     Route::post('/dosen/{id}', [AdminController::class, 'updateDosen'])->name('dosen.update');
     Route::delete('/dosen/{id}', [AdminController::class, 'deleteDosen'])->name('dosen.delete');
-    
+
     // Manage Kelompok
     Route::get('/kelompok', [AdminController::class, 'kelompok'])->name('kelompok');
     Route::post('/kelompok', [AdminController::class, 'storeGroup'])->name('kelompok.store');
     Route::post('/kelompok/{id}', [AdminController::class, 'updateGroup'])->name('kelompok.update');
     Route::delete('/kelompok/{id}', [AdminController::class, 'deleteGroup'])->name('kelompok.delete');
-    
-    
+
+
     // Manage Prodi
     Route::get('/prodi', [AdminController::class, 'prodiIndex'])->name('prodi');
     Route::post('/prodi', [AdminController::class, 'prodiStore'])->name('prodi.store');

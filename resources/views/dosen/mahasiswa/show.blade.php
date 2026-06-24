@@ -231,7 +231,8 @@
                                     <!-- Status Line -->
                                     <div class="absolute left-0 top-0 bottom-0 w-1.5 
                                         @if($log->status === 'approved') bg-emerald-500
-                                        @elseif($log->status === 'rejected') bg-red-500
+                                        @elseif($log->status === 'rejected')
+                                            @if($log->dosen_note) bg-orange-500 @else bg-red-500 @endif
                                         @else bg-amber-500 @endif">
                                     </div>
 
@@ -252,7 +253,11 @@
                                             @if($log->status === 'approved')
                                                 <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">Disetujui</span>
                                             @elseif($log->status === 'rejected')
-                                                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-red-50 text-red-700 border border-red-200">Ditolak</span>
+                                                @if($log->dosen_note)
+                                                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-orange-50 text-orange-700 border border-orange-200">Revisi / Perbaikan</span>
+                                                @else
+                                                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-red-50 text-red-700 border border-red-200">Ditolak</span>
+                                                @endif
                                             @else
                                                 <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-50 text-amber-700 border border-amber-200">Pending</span>
                                             @endif
@@ -329,7 +334,8 @@
                                         <!-- Status Line -->
                                         <div class="absolute left-0 top-0 bottom-0 w-1.5 
                                             @if($log->status === 'approved') bg-emerald-500
-                                            @elseif($log->status === 'rejected') bg-red-500
+                                            @elseif($log->status === 'rejected')
+                                                @if($log->dosen_note) bg-orange-500 @else bg-red-500 @endif
                                             @else bg-amber-500 @endif">
                                         </div>
 
@@ -359,7 +365,11 @@
                                                 @if($log->status === 'approved')
                                                     <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">Disetujui</span>
                                                 @elseif($log->status === 'rejected')
-                                                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-red-50 text-red-700 border border-red-200">Ditolak</span>
+                                                    @if($log->dosen_note)
+                                                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-orange-50 text-orange-700 border border-orange-200">Revisi / Perbaikan</span>
+                                                    @else
+                                                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-red-50 text-red-700 border border-red-200">Ditolak</span>
+                                                    @endif
                                                 @else
                                                     <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-50 text-amber-700 border border-amber-200">Pending</span>
                                                 @endif
