@@ -64,7 +64,7 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
-            'nim' => 'required|string|unique:users',
+            'nim' => 'required|numeric|unique:users',
             'prodi' => 'required|string',
             'angkatan' => 'required|string',
         ], [
@@ -76,6 +76,7 @@ class AuthController extends Controller
             'password.min' => 'Password minimal harus 6 karakter.',
             'password.confirmed' => 'Konfirmasi password tidak cocok.',
             'nim.required' => 'NIM wajib diisi.',
+            'nim.numeric' => 'NIM harus berupa angka.',
             'nim.unique' => 'NIM sudah terdaftar.',
             'prodi.required' => 'Program Studi wajib diisi.',
             'angkatan.required' => 'Angkatan wajib diisi.',
