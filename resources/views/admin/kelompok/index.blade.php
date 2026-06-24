@@ -134,8 +134,14 @@
 
             <div>
                 <label for="theme" class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Tema Proyek</label>
-                <input type="text" name="theme" required placeholder="Contoh: Internet of Things (IoT), AI, Web App"
+                <select name="theme" id="theme" required
                     class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    <option value="" disabled selected>Pilih Tema Proyek</option>
+                    <option value="peningkatan layanan pendidikan formal informal">Peningkatan layanan pendidikan formal informal</option>
+                    <option value="perbaikan atau peningkatan proses monitoring dan layanan publik">Perbaikan atau peningkatan proses monitoring dan layanan publik</option>
+                    <option value="peningkatan produktivitas umkm">Peningkatan produktivitas UMKM</option>
+                    <option value="peningkatan produktivitas pertanian perikanan perkebunan">Peningkatan produktivitas pertanian perikanan perkebunan</option>
+                </select>
             </div>
 
             <div>
@@ -189,8 +195,14 @@
 
             <div>
                 <label for="edit_theme" class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Tema Proyek</label>
-                <input type="text" name="theme" id="edit_theme" required placeholder="Contoh: Internet of Things (IoT), AI, Web App"
+                <select name="theme" id="edit_theme" required
                     class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    <option value="" disabled selected>Pilih Tema Proyek</option>
+                    <option value="peningkatan layanan pendidikan formal informal">Peningkatan layanan pendidikan formal informal</option>
+                    <option value="perbaikan atau peningkatan proses monitoring dan layanan publik">Perbaikan atau peningkatan proses monitoring dan layanan publik</option>
+                    <option value="peningkatan produktivitas umkm">Peningkatan produktivitas UMKM</option>
+                    <option value="peningkatan produktivitas pertanian perikanan perkebunan">Peningkatan produktivitas pertanian perikanan perkebunan</option>
+                </select>
             </div>
 
             <div>
@@ -232,7 +244,23 @@
 
     function openEditModal(group, currentMemberIds) {
         document.getElementById('edit_group_name').value = group.group_name;
-        document.getElementById('edit_theme').value = group.theme || '';
+        
+        const themeSelect = document.getElementById('edit_theme');
+        themeSelect.value = group.theme || '';
+        if (group.theme && !themeSelect.value) {
+            // Remove dynamically added custom options from previous opens first (if any)
+            const existingCustom = themeSelect.querySelector('option[data-custom="true"]');
+            if (existingCustom) {
+                existingCustom.remove();
+            }
+            const opt = document.createElement('option');
+            opt.value = group.theme;
+            opt.textContent = group.theme;
+            opt.setAttribute('data-custom', 'true');
+            themeSelect.appendChild(opt);
+            themeSelect.value = group.theme;
+        }
+        
         document.getElementById('edit_dosen_id').value = group.dosen_id || '';
         
         // Build list of checkboxes dynamically

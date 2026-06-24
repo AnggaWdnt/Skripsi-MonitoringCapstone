@@ -248,12 +248,13 @@ class AdminController extends Controller
     {
         $request->validate([
             'group_name' => 'required|string|max:255|unique:groups,group_name',
-            'theme' => 'required|string|max:255',
+            'theme' => 'required|string|in:peningkatan layanan pendidikan formal informal,perbaikan atau peningkatan proses monitoring dan layanan publik,peningkatan produktivitas umkm,peningkatan produktivitas pertanian perikanan perkebunan',
             'dosen_id' => 'nullable|exists:users,id',
             'member_ids' => 'nullable|array',
             'member_ids.*' => 'exists:users,id',
         ], [
             'group_name.unique' => 'Nama kelompok sudah digunakan.',
+            'theme.in' => 'Tema proyek yang dipilih tidak valid.',
         ]);
 
         $group = Group::create([
@@ -282,10 +283,12 @@ class AdminController extends Controller
 
         $request->validate([
             'group_name' => 'required|string|max:255|unique:groups,group_name,' . $group->id,
-            'theme' => 'required|string|max:255',
+            'theme' => 'required|string|in:peningkatan layanan pendidikan formal informal,perbaikan atau peningkatan proses monitoring dan layanan publik,peningkatan produktivitas umkm,peningkatan produktivitas pertanian perikanan perkebunan',
             'dosen_id' => 'nullable|exists:users,id',
             'member_ids' => 'nullable|array',
             'member_ids.*' => 'exists:users,id',
+        ], [
+            'theme.in' => 'Tema proyek yang dipilih tidak valid.',
         ]);
 
         $group->update([

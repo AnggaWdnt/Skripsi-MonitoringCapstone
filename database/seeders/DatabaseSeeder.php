@@ -58,7 +58,7 @@ class DatabaseSeeder extends Seeder
         // Create Capstone Group 1 (assigned by Prodi) - Approved
         $group = \App\Models\Group::create([
             'group_name' => 'Kelompok Capstone TI-01',
-            'theme' => 'Internet of Things (IoT)',
+            'theme' => 'perbaikan atau peningkatan proses monitoring dan layanan publik',
             'dosen_id' => $dosen->id,
             'title' => 'Sistem Monitoring Kinerja Panel Surya Berbasis Internet of Things (IoT)',
             'description' => 'Sistem pemantauan parameter kelistrikan panel surya secara real-time menggunakan protokol MQTT dan divisualisasikan dalam bentuk web dashboard.',
@@ -132,7 +132,7 @@ class DatabaseSeeder extends Seeder
         // Create Group 2 (TI-02, approved title)
         $group2 = \App\Models\Group::create([
             'group_name' => 'Kelompok Capstone TI-02',
-            'theme' => 'Kecerdasan Buatan (AI)',
+            'theme' => 'peningkatan produktivitas umkm',
             'dosen_id' => $dosen2->id,
             'title' => 'Sistem Rekomendasi Destinasi Wisata Menggunakan Collaborative Filtering',
             'description' => 'Aplikasi web untuk memberikan rekomendasi destinasi wisata di Yogyakarta berdasarkan rating pengguna lain.',
@@ -249,7 +249,7 @@ class DatabaseSeeder extends Seeder
         // Create Group 3 (TI-03, pending title) - Supervised by Dosen 1 (Bambang)
         $group3 = \App\Models\Group::create([
             'group_name' => 'Kelompok Capstone TI-03',
-            'theme' => 'Sistem Cerdas & Internet of Things (IoT)',
+            'theme' => 'peningkatan produktivitas pertanian perikanan perkebunan',
             'dosen_id' => $dosen->id,
             'title' => 'Rancang Bangun Sistem Smart Agriculture Berbasis IoT dan Machine Learning',
             'description' => 'Sistem cerdas untuk mendeteksi kelembaban tanah dan mengontrol irigasi tanaman pangan secara otomatis.',
@@ -285,7 +285,7 @@ class DatabaseSeeder extends Seeder
         // Create Group 4 (TI-04, rejected title) - Supervised by Dosen 2 (Siti)
         $group4 = \App\Models\Group::create([
             'group_name' => 'Kelompok Capstone TI-04',
-            'theme' => 'Rekayasa Perangkat Lunak (RPL)',
+            'theme' => 'peningkatan layanan pendidikan formal informal',
             'dosen_id' => $dosen2->id,
             'title' => 'Sistem Kasir Sederhana Minimarket',
             'description' => 'Aplikasi kasir berbasis Java desktop untuk mencatat transaksi penjualan harian minimarket.',
