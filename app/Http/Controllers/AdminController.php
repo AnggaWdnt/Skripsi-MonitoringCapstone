@@ -197,7 +197,7 @@ class AdminController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6',
-            'nidn' => 'required|string|unique:users',
+            'nidn' => 'required|numeric|unique:users',
             'prodi' => 'required|string',
         ], [
             'name.required' => 'Nama dosen wajib diisi.',
@@ -207,6 +207,7 @@ class AdminController extends Controller
             'password.required' => 'Password wajib diisi.',
             'password.min' => 'Password minimal terdiri dari 6 karakter.',
             'nidn.required' => 'NIDN wajib diisi.',
+            'nidn.numeric' => 'NIDN harus berupa angka.',
             'nidn.unique' => 'NIDN ini sudah terdaftar.',
             'prodi.required' => 'Program Studi wajib diisi.',
         ]);
@@ -233,7 +234,7 @@ class AdminController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $dosen->id,
-            'nidn' => 'required|string|unique:users,nidn,' . $dosen->id,
+            'nidn' => 'required|numeric|unique:users,nidn,' . $dosen->id,
             'prodi' => 'required|string',
         ], [
             'name.required' => 'Nama dosen wajib diisi.',
@@ -241,6 +242,7 @@ class AdminController extends Controller
             'email.email' => 'Format email tidak valid.',
             'email.unique' => 'Email ini sudah terdaftar.',
             'nidn.required' => 'NIDN wajib diisi.',
+            'nidn.numeric' => 'NIDN harus berupa angka.',
             'nidn.unique' => 'NIDN ini sudah terdaftar.',
             'prodi.required' => 'Program Studi wajib diisi.',
         ]);
